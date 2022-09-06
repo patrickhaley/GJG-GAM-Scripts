@@ -23,6 +23,6 @@
 # m h  dom mon dow   command
 #
 # Create daily backup of crontab
-0 0 * * * cd ~/gjg-gam-scripts %% crontab -l > crontab.backup | echo "`date`: crontab backup completed" >> ~/gjg-gam-scripts/scheduled_tasks.log
+0 0 * * * cd ~/bin/gjg-gam-scripts %% crontab -l > crontab.backup | echo "`date` - Backup crontab" >> ~/bin/gjg-gam-scripts/scheduled_tasks.log
 # Update OU from Groups daily
-0 0 * * * cd ~/gjg-gamscripts/ && ./UpdateOrgUnitFromGroups.sh | echo "`date` - Execute UpdateOrgUnitFromGroups.sh" >> ~/gjg-gam-sripts/scheduled_tasks.log
+0 0 * * * cd ~/bin/gjg-gamscripts/ && ./UpdateOrgUnitFromGroups.sh | echo "`date` - Execute UpdateOrgUnitFromGroups.sh" >> ~/bin/gjg-gam-sripts/scheduled_tasks.log
