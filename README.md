@@ -10,12 +10,24 @@ Scripts are modified and saved in "/home/patrick/bin/GAMScripts". Then they are 
 
 # Envionment Configuration
 1. Install Python3 and pip
-    sudo apt install python3
-    sudo apt install python3-pip
+```
+sudo apt install python3
+```
+```
+sudo apt install python3-pip
+```
 2. Create aliases for python and pip
-    alias python=python3 ; alias pip=pip3
+```
+alias python=python3 ; alias pip=pip3
+```
 3. Install python-dotenv
-    sudo pip install python-dotenv
-4. Clone repo to directory
-5. Rename .env.example to .env and add environment variables
-6. Set up Deploy Github Hook 
+```
+sudo pip install python-dotenv
+```
+4. Install git
+```
+sudo apt install git-all
+```
+5. Clone repo to directory
+6. Rename '.env.example' to '.env' and add environment variables
+7. Set up Deploy Github Hook 
