@@ -7,3 +7,15 @@ on https://github.com/taers232c/GAMADV-XTD3.
 
 # How to Use this Project
 Scripts are modified and saved in "/home/patrick/bin/GAMScripts". Then they are scheduled as CRON jobs and accessed via "crontab -e". Each CRON job should append the job to /home/patrick/bin/GAMScripts/scheduled_tasks.log.
+
+# Envionment Configuration
+1. Install Python3 and pip
+    sudo apt install python3
+    sudo apt install python3-pip
+2. Create aliases for python and pip
+    alias python=python3 ; alias pip=pip3
+3. Install python-dotenv
+    sudo pip install python-dotenv
+4. Clone repo to directory
+5. Rename .env.example to .env and add environment variables
+6. Set up Deploy Github Hook 
