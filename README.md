@@ -33,42 +33,12 @@ bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/mas
 ```
 gam info domain
 ```
-5. Create GAMwork and edit gam.config
+5. Run gam_setup.sh to create GAMwork and gam config directories
 ```
 bash GJG-GAM-Scripts/setup/gam_setup.sh
 ```
-6. Rename .env.example file
+6. Edit gam.cfg to add other customers/regions
+7. Rename .env.example file
 ```
-mv GJG-GAM-Scripts/.env.example GJG-GAM-Scripts/.env
+mv /home/ec2-user/GJG-GAM-Scripts/.env.example GJG-GAM-Scripts/.env
 ```
-
-# Configure CI/CD Pipeline
-1. Make .ssh directory.
-```
-sudo mkdir ~/.ssh
-```
-2. Give permissions to www user.
-```
-sudo chown -R www-data:www-data ~/.ssh
-```
-3. Generate SSH key.
-```
-sudo -Hu www-data ssh-keygen -t rsa
-```
-4. Give the SSH Key a name
-```
-key_name
-```
-5. Leave all other fields empty until randomart image is generated then display the key.
-```
-sudo cat .ssh/key_name.pub
-```
-6. Copy the SSH key.
-7. Navigate to GitHub repo and click Settings > Deploy keys
-8. Give the key a title, paste the SSH key into the field, and click Save.
-9. Navigate back to the server and view html folder.
-```
-cd /home/user_directory
-```
-10. Give folder permissions to www user.
-
