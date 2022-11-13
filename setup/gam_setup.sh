@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # setup config files
-mkdir ../GAMWork/au &&
-mkdir ../GAMWork/nz &&
-mkdir ../GAMWork/us
+sudo mkdir ../GAMWork/au &&
+sudo mkdir ../GAMWork/nz &&
+sudo mkdir ../GAMWork/us
