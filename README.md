@@ -9,25 +9,52 @@ on https://github.com/taers232c/GAMADV-XTD3.
 Scripts are modified and saved in "/home/patrick/bin/GAMScripts". Then they are scheduled as CRON jobs and accessed via "crontab -e". Each CRON job should append the job to /home/patrick/bin/GAMScripts/scheduled_tasks.log.
 
 # Envionment Configuration
-1. Install Python3 and pip
+This assumes an EC2 instance has already been launched and the SSH Key Pair file has been downloaded. Replace PATH/TO/.PEM/FILE with the location of the Key Pair and INSTANCE_IPV4_ADDRESS with the IPv4 address of the instance.
+
+1. Save SSH key pair file to .ssh
+
+2. Connect to EC2 instance
+
+3. Create file ec2_setup.sh and paste contents from setup file and execute it
 ```
-sudo apt install python3
+bash ece_setup.sh
 ```
+4. Rename .env.example file
 ```
-sudo apt install python3-pip
+mv .env.example .env
 ```
-2. Create aliases for python and pip
+5. Install GAMADV-XTD3
 ```
-alias python=python3 ; alias pip=pip3
+bash /bin/gam_setup.sh
 ```
-3. Install python-dotenv
+
+# Configure CI/CD Pipeline
+1. Make .ssh directory.
 ```
-sudo pip install python-dotenv
+sudo mkdir ~/.ssh
 ```
-4. Install git
+2. Give permissions to www user.
 ```
-sudo apt install git-all
+sudo chown -R www-data:www-data ~/.ssh
 ```
-5. Clone repo to directory
-6. Rename '.env.example' to '.env' and add environment variables
-7. Set up Deploy Github Hook 
+3. Generate SSH key.
+```
+sudo -Hu www-data ssh-keygen -t rsa
+```
+4. Give the SSH Key a name
+```
+key_name
+```
+5. Leave all other fields empty until randomart image is generated then display the key.
+```
+sudo cat .ssh/key_name.pub
+```
+6. Copy the SSH key.
+7. Navigate to GitHub repo and click Settings > Deploy keys
+8. Give the key a title, paste the SSH key into the field, and click Save.
+9. Navigate back to the server and view html folder.
+```
+cd /home/user_directory
+```
+10. Give folder permissions to www user.
+
