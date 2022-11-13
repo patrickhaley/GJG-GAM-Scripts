@@ -8,24 +8,38 @@ on https://github.com/taers232c/GAMADV-XTD3.
 # How to Use this Project
 Scripts are modified and saved in "/home/patrick/bin/GAMScripts". Then they are scheduled as CRON jobs and accessed via "crontab -e". Each CRON job should append the job to /home/patrick/bin/GAMScripts/scheduled_tasks.log.
 
+# Infrastructure Setup
+1. Launch an an Amazon EC2 instance using the Linux 2 AMI; Free tier is fine for this application.
+2. Save SSH key pair file to .ssh
+3. Connect to the EC2 instance
+
 # Envionment Configuration
-This assumes an EC2 instance has already been launched and the SSH Key Pair file has been downloaded. Replace PATH/TO/.PEM/FILE with the location of the Key Pair and INSTANCE_IPV4_ADDRESS with the IPv4 address of the instance.
-
-1. Save SSH key pair file to .ssh
-
-2. Connect to EC2 instance
-
-3. Create file ec2_setup.sh and paste contents from setup file and execute it
+1. Install git
 ```
-bash ece_setup.sh
+sudo yum install -y git-all
 ```
-4. Rename .env.example file
+2. Clone this repo
 ```
-mv .env.example .env
+git clone https://github.com/patrickhaley/GJG-GAM-Scripts.git
 ```
-5. Install GAMADV-XTD3
+3. Run ec2_setup.sh to configure the environment
 ```
-bash /bin/gam_setup.sh
+bash GJG-GAM-Scripts/setup/ec2_setup.sh
+```
+4. Install GAMADV-XTD3 (https://github.com/taers232c/GAMADV-XTD3)
+```
+bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh)
+```
+```
+gam info domain
+```
+5. Create GAMwork and edit gam.config
+```
+bash GJG-GAM-Scripts/setup/gam_setup.sh
+```
+6. Rename .env.example file
+```
+mv GJG-GAM-Scripts/.env.example GJG-GAM-Scripts/.env
 ```
 
 # Configure CI/CD Pipeline
