@@ -55,7 +55,7 @@ aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
 # aws configure set default.output_format json
 
 # Define a function for simplified AWS QuickSight commands
-echo "function aws_qs() {" >> ~/.bashrc
+echo "function qs() {" >> ~/.bashrc
 echo "    aws quicksight \"\$@\" --aws-account-id $AWS_ACCOUNT_ID --namespace default" >> ~/.bashrc
 echo "}" >> ~/.bashrc
 
