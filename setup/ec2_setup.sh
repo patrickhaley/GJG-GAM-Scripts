@@ -54,7 +54,14 @@ aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
 # aws configure set default.region your_default_region
 # aws configure set default.output_format json
 
+# Define a function for simplified AWS QuickSight commands
+echo "function aws_qs() {" >> ~/.bashrc
+echo "    aws quicksight \"\$@\" --aws-account-id $AWS_ACCOUNT_ID --namespace default" >> ~/.bashrc
+echo "}" >> ~/.bashrc
+
+echo "QuickSight function added to .bashrc."
+
 # Uncomment the following line if you want to run aws configure interactively for additional configuration
 # aws configure
 
-echo "AWS environment setup completed successfully."
+echo "AWS environment setup completed successfully. Run 'aws configure' to change the default region."
