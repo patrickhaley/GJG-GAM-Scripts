@@ -1,44 +1,37 @@
 # GAM Script Toolbox
-Collection of GAMADV-XTD3 scripts used and scheduled via CRON jobs to 
-automate Google Workspace administrative tasks. These commands are based 
-on https://github.com/taers232c/GAMADV-XTD3.
 
-> DO NOT PASTE PRIVATE INFORMATION HERE!!!
+This repository contains a collection of GAMADV-XTD3 scripts designed to automate Google Workspace administrative tasks. These scripts are intended to be scheduled via CRON jobs. The commands are based on [GAMADV-XTD3](https://github.com/taers232c/GAMADV-XTD3).
 
-# How to Use this Project
-Scripts are modified and saved in "/home/patrick/bin/GAMScripts". Then they are scheduled as CRON jobs and accessed via "crontab -e". Each CRON job should append the job to /home/patrick/bin/GAMScripts/scheduled_tasks.log.
+> **Warning**: DO NOT PASTE PRIVATE INFORMATION HERE!!!
 
-# Infrastructure Setup
-1. Launch an an Amazon EC2 instance using the Linux 2 AMI; Free tier is fine for this application.
-2. Save SSH key pair file to .ssh
-3. Connect to the EC2 instance
+## How to Use this Project
 
-# Envionment Configuration
-1. Install git
-```
-sudo yum install -y git-all
-```
-2. Clone this repo
+Scripts are stored and modified in `/home/ec2-user/GJG-GAM-Scripts`. They are scheduled as CRON jobs and managed via `crontab -e`. Each CRON job should append its output to `/home/ec2-user/GJG-GAM-Scripts/scheduled_tasks.log`.
+
+## Infrastructure Setup
+
+1. Launch an Amazon EC2 instance using the Linux 2 AMI. The free tier is sufficient for this application.
+2. Save the SSH key pair file to your `.ssh` directory.
+3. Connect to the EC2 instance using SSH.
+
+## Environment Configuration
+
+1. Clone this repository on your EC2 instance:
 ```
 git clone https://github.com/patrickhaley/GJG-GAM-Scripts.git
 ```
-3. Run ec2_setup.sh to configure the environment
+2. Run `setup.sh` to configure the environment. This script will install and set up Python, AWS CLI, GAMADV-XTD3, and other necessary components:
 ```
-bash GJG-GAM-Scripts/setup/ec2_setup.sh
+bash GJG-GAM-Scripts/setup.sh
 ```
-4. Install GAMADV-XTD3 (https://github.com/taers232c/GAMADV-XTD3)
+3. Edit `gam.cfg` to add configurations for other workspace customers/regions if necessary.
+4. Rename `.env.example` file to `.env` and update it with your AWS and Google Workspace credentials:
 ```
-bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh)
+mv /home/ec2-user/GJG-GAM-Scripts/.env.example /home/ec2-user/GJG-GAM-Scripts/.env
 ```
-```
-gam info domain
-```
-5. Run gam_setup.sh to create GAMwork and gam config directories
-```
-bash GJG-GAM-Scripts/setup/gam_setup.sh
-```
-6. Edit gam.cfg to add other customers/regions
-7. Rename .env.example file
-```
-mv /home/ec2-user/GJG-GAM-Scripts/.env.example GJG-GAM-Scripts/.env
-```
+5. Customize the environment as needed for your specific Google Workspace and AWS configurations.
+
+## Additional Information
+
+- The `setup.sh` script significantly simplifies the initial setup by automating several steps, including the installation of GAMADV-XTD3. It also configures Python, AWS CLI, and creates necessary directories and configurations for GAM.
+- For specific CRON job setups, refer to your server's CRON documentation and the specific requirements of your scripts.
