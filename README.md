@@ -1,4 +1,4 @@
-# GAM Script Toolbox
+# GJG GAM Script Toolbox
 
 This repository contains a collection of GAMADV-XTD3 scripts designed to automate Google Workspace administrative tasks. These scripts are intended to be scheduled via CRON jobs. The commands are based on [GAMADV-XTD3](https://github.com/taers232c/GAMADV-XTD3).
 
