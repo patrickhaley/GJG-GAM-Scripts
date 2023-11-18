@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script sets up an EC2 instance by installing Python and its dependencies, 
+# configuring AWS CLI, and adding a shortcut function for AWS QuickSight commands.
+
 # Exit if any command fails
 set -e
 
@@ -59,7 +62,7 @@ echo "function qs() {" >> ~/.bashrc
 echo "    aws quicksight \"\$@\" --aws-account-id $AWS_ACCOUNT_ID --namespace default" >> ~/.bashrc
 echo "}" >> ~/.bashrc
 
-echo "QuickSight function added to .bashrc."
+echo "QuickSight shortcut function added to .bashrc."
 
 # Uncomment the following line if you want to run aws configure interactively for additional configuration
 # aws configure
