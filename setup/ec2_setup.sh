@@ -1,70 +1,96 @@
 #!/bin/bash
 
-# This script sets up an EC2 instance by installing Python and its dependencies, 
-# configuring AWS CLI, and adding a shortcut function for AWS QuickSight commands.
+# This script automates the setup of an Amazon EC2 instance for managing Google Workspace accounts using GAMADV-XTD3 and AWS QuickSight.
+# It performs the following functions:
+# 1. Updates the system and installs Python along with necessary dependencies.
+# 2. Sets up Python and pip aliases for convenience.
+# 3. Installs or updates the AWS CLI and allows the user to configure the AWS region.
+# 4. Installs or updates GAMADV-XTD3, a command-line tool for Google Workspace administration.
+# Usage: Run this script as a superuser on an Amazon EC2 instance to prepare the environment for Google Workspace and AWS management.
 
 # Exit if any command fails
 set -e
 
-# Updating and Installing Python and its dependencies
-echo "Updating system and installing Python and its dependencies..."
-sudo yum update -y
-sudo yum install -y python3
+# Function to ask for confirmation (Y/N)
+confirm_action() {
+    read -p "$1 (Y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
 
-# Check if pip is installed, install if not
-if ! command -v pip3 &> /dev/null; then
-    sudo yum install -y python3-pip
+# Updating and Installing Python and its dependencies
+if confirm_action "Do you want to update the system and install Python and its dependencies?"; then
+    echo "Updating system and installing Python and its dependencies..."
+    sudo yum update -y
+    sudo yum install -y python3
+    if ! command -v pip3 &> /dev/null; then
+        sudo yum install -y python3-pip
+    fi
+    echo "Installing required Python libraries..."
+    pip3 install --upgrade pip
+    pip3 install requests
+    pip3 install python-dotenv
+    echo "Python setup completed successfully."
 fi
 
-# Upgrade pip and install required Python libraries
-echo "Installing required Python libraries..."
-pip3 install --upgrade pip
-pip3 install requests
-pip3 install python-dotenv
-
-# Set aliases for python and pip (they will only be available in new shell sessions)
+# Set aliases for python and pip
 echo "alias python=python3" >> ~/.bashrc
 echo "alias pip=pip3" >> ~/.bashrc
 source ~/.bashrc
 
-echo "Python setup completed successfully."
-
 # Load the .env file for AWS credentials
 echo "Loading AWS credentials from .env file..."
-set -a # automatically export all variables
+set -a
 source .env
 set +a
 
-# Installing AWS CLI
-echo "Installing AWS CLI..."
-if ! command -v aws &> /dev/null; then
-    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    sudo yum install -y unzip
-    unzip awscliv2.zip
-    sudo ./aws/install
+# Installing or Updating AWS CLI
+if command -v aws &> /dev/null; then
+    echo "AWS CLI is already installed. Current version:"
+    aws --version
+    if confirm_action "Do you want to update AWS CLI?"; then
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        sudo yum install -y unzip
+        unzip -o awscliv2.zip
+        sudo ./aws/install --update
+    fi
+else
+    if confirm_action "AWS CLI is not installed. Do you want to install it?"; then
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        sudo yum install -y unzip
+        unzip awscliv2.zip
+        sudo ./aws/install
+    fi
 fi
 
-# Check AWS CLI version
-aws --version
+# Configure AWS region
+current_region=$(aws configure get region)
+echo "Current AWS region is: $current_region"
+echo "1) Default"
+echo "2) us-east-1"
+echo "3) ap-southeast-2"
+read -p "Select region (1/2/3): " region_choice
+case $region_choice in
+    2) aws configure set region us-east-1 ;;
+    3) aws configure set region ap-southeast-2 ;;
+    *) echo "Keeping the default region." ;;
+esac
 
-echo "AWS CLI installed successfully."
+# Setting up GAM
+if confirm_action "Do you want to install or update GAM?"; then
+    if command -v gam &> /dev/null; then
+        if confirm_action "GAM is already installed. Do you want to upgrade it?"; then
+            gam config no_browser true save
+            gam update project
+        fi
+    else
+        bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh)
+    fi
+    echo "GAM setup completed successfully."
+fi
 
-# Configure AWS Access Key, Secret Key
-echo "Configuring AWS CLI with provided credentials..."
-aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
-# Optionally set default region and output format
-# aws configure set default.region your_default_region
-# aws configure set default.output_format json
-
-# Define a function for simplified AWS QuickSight commands
-echo "function qs() {" >> ~/.bashrc
-echo "    aws quicksight \"\$@\" --aws-account-id $AWS_ACCOUNT_ID --namespace default" >> ~/.bashrc
-echo "}" >> ~/.bashrc
-
-echo "QuickSight shortcut function added to .bashrc."
-
-# Uncomment the following line if you want to run aws configure interactively for additional configuration
-# aws configure
-
-echo "AWS environment setup completed successfully. Run 'aws configure' to change the default region."
+echo "EC2 and GAM environment setup completed successfully."
