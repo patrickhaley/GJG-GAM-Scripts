@@ -42,10 +42,13 @@ echo "alias python=python3" >> ~/.bashrc
 echo "alias pip=pip3" >> ~/.bashrc
 source ~/.bashrc
 
+# Change to home directory
+cd /home/ec2-user
+
 # Load the .env file for AWS credentials
 echo "Loading AWS credentials from .env file..."
 set -a
-source .env
+source /home/ec2-user/GJG-GAM-Scripts/.env
 set +a
 
 # Installing or Updating AWS CLI
