@@ -114,10 +114,13 @@ echo
 # Adding AWS aliases
 if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
     echo "alias qs='aws quicksight'" >> ~/.bashrc
-    echo "alias idns='--aws-account-id $AWS_ACCOUNT_ID --namespace default'" >> ~/.bashrc
-    echo
-    echo "Aliases added to .bashrc successfully."
-    echo
+    # Use a function to dynamically get AWS_ACCOUNT_ID
+    echo 'set_idns_alias() {' >> ~/.bashrc
+    echo '    local AWS_ACCOUNT_ID=$(grep "AWS_ACCOUNT_ID" ~/GJG-GAM-Scripts/.env | cut -d "=" -f2)' >> ~/.bashrc
+    echo '    alias idns="--aws-account-id $AWS_ACCOUNT_ID --namespace default"' >> ~/.bashrc
+    echo '}' >> ~/.bashrc
+    echo 'set_idns_alias' >> ~/.bashrc
+    echo "QuickSight aliases added to .bashrc successfully."
 fi
 
 # # Setting up GAM
