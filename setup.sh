@@ -113,9 +113,13 @@ echo
 
 # Adding AWS aliases
 if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
-    echo "alias qs='aws quicksight'" >> ~/.bashrc
+    # echo "alias qs='aws quicksight'" >> ~/.bashrc
     # Use aws sts get-caller-identity to get your account id and replace below 
-    echo "alias idns='--aws-account-id 132810038836 --namespace default'" >> ~/.bashrc
+    export QS_AWS_ACCOUNT_ID=132810038836
+    export QS_NAMESPACE=default
+    qs() {
+        aws quicksight "$1" --aws-account-id $QS_AWS_ACCOUNT_ID --namespace $QS_NAMESPACE "${@:2}"
+    }
     echo
     echo "Aliases added to .bashrc successfully."
     echo
