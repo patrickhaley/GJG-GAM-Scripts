@@ -11,9 +11,6 @@
 # Exit if any command fails
 set -e
 
-# Change to home directory
-cd ..
-
 # Function to ask for confirmation (Y/N)
 confirm_action() {
     read -p "$1 (Y/N): " -n 1 -r
@@ -55,50 +52,57 @@ if confirm_action "Do you want to add Python and Pip aliases to your .bashrc?"; 
     echo
 fi
 
-# # Load the .env file for AWS credentials
-# echo "Loading AWS credentials from .env file..."
-# set -a
-# source /home/ec2-user/GJG-GAM-Scripts/.env
-# set +a
+# Change to home directory
+cd /home/ec2-user
 
-# # Installing or Updating AWS CLI
-# if command -v aws &> /dev/null; then
-#     echo "AWS CLI is already installed. Current version:"
-#     aws --version
-#     if confirm_action "Do you want to update AWS CLI?"; then
-#         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#         sudo yum install -y unzip
-#         unzip -o awscliv2.zip
-#         sudo ./aws/install --update
-#     fi
-# else
-#     if confirm_action "AWS CLI is not installed. Do you want to install it?"; then
-#         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#         sudo yum install -y unzip
-#         unzip awscliv2.zip
-#         sudo ./aws/install
-#     fi
-# fi
+# Load the .env file for AWS credentials
+echo
+echo "Loading AWS credentials from .env file..."
+echo
+set -a
+source /home/ec2-user/GJG-GAM-Scripts/.env
+set +a
 
-# # Configure AWS Access Key, Secret Key
-# echo "Configuring AWS CLI with provided credentials..."
-# aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
-# aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+# Installing or Updating AWS CLI
+if command -v aws &> /dev/null; then
+    echo "AWS CLI is already installed. Current version:"
+    aws --version
+    if confirm_action "Do you want to update AWS CLI?"; then
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        sudo yum install -y unzip
+        unzip -o awscliv2.zip
+        sudo ./aws/install --update
+    fi
+else
+    if confirm_action "AWS CLI is not installed. Do you want to install it?"; then
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        sudo yum install -y unzip
+        unzip awscliv2.zip
+        sudo ./aws/install
+    fi
+fi
 
-# # Configure AWS region
-# current_region=$(aws configure get region)
-# echo "Current AWS region is: $current_region"
-# echo "1) Default"
-# echo "2) us-east-1"
-# echo "3) ap-southeast-2"
-# read -p "Select region (1/2/3): " region_choice
-# case $region_choice in
-#     2) aws configure set region us-east-1 ;;
-#     3) aws configure set region ap-southeast-2 ;;
-#     *) echo "Keeping the default region." ;;
-# esac
+# Configure AWS Access Key, Secret Key
+echo "Configuring AWS CLI with provided credentials..."
+aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
 
-# echo "AWS configuration completed successfully."
+# Configure AWS region
+current_region=$(aws configure get region)
+echo "Current AWS region is: $current_region"
+echo "1) Default"
+echo "2) us-east-1"
+echo "3) ap-southeast-2"
+read -p "Select region (1/2/3): " region_choice
+case $region_choice in
+    2) aws configure set region us-east-1 ;;
+    3) aws configure set region ap-southeast-2 ;;
+    *) echo "Keeping the default region." ;;
+esac
+
+echo
+echo "AWS configuration completed successfully."
+echo
 
 # # Setting up GAM
 # if confirm_action "Do you want to install or update GAM?"; then
