@@ -46,6 +46,9 @@ set -a
 source /home/ec2-user/GJG-GAM-Scripts/.env
 set +a
 
+# Extract AWS_ACCOUNT_ID from .env file
+AWS_ACCOUNT_ID=$(grep 'AWS_ACCOUNT_ID' /home/ec2-user/GJG-GAM-Scripts/.env | cut -d '=' -f2)
+
 # Installing or Updating AWS CLI
 if command -v aws &> /dev/null; then
     echo "AWS CLI is already installed. Current version:"
