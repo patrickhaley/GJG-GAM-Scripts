@@ -3,7 +3,7 @@
 # This script automates the setup of an Amazon EC2 instance for managing Google Workspace accounts using GAMADV-XTD3 and AWS QuickSight.
 # It performs the following functions:
 # 1. Updates the system and installs Python along with necessary dependencies.
-# 2. Sets up Python and pip aliases for convenience.
+# 2. Optionally sets up Python and pip aliases for convenience.
 # 3. Installs or updates the AWS CLI and allows the user to configure the AWS region.
 # 4. Installs or updates GAMADV-XTD3, a command-line tool for Google Workspace administration.
 # Usage: Run this script as a superuser on an Amazon EC2 instance to prepare the environment for Google Workspace and AWS management.
@@ -36,11 +36,6 @@ if confirm_action "Do you want to update the system and install Python and its d
     pip3 install python-dotenv
     echo "Python setup completed successfully."
 fi
-
-# Set aliases for python and pip
-echo "alias python=python3" >> ~/.bashrc
-echo "alias pip=pip3" >> ~/.bashrc
-source ~/.bashrc
 
 # Change to home directory
 cd /home/ec2-user
@@ -95,5 +90,21 @@ if confirm_action "Do you want to install or update GAM?"; then
     fi
     echo "GAM setup completed successfully."
 fi
+
+# Adding aliases and functions
+if confirm_action "Do you want to add Python and Pip aliases to your .bashrc?"; then
+    echo "alias python=python3" >> ~/.bashrc
+    echo "alias pip=pip3" >> ~/.bashrc
+fi
+
+if confirm_action "Do you want to add the QuickSight shortcut function to your .bashrc?"; then
+    echo "function qs() {" >> ~/.bashrc
+    echo "    local subcommand=\$1" >> ~/.bashrc
+    echo "    shift" >> ~/.bashrc
+    echo "    aws quicksight \"\$subcommand\" --aws-account-id 132810038836 --namespace default \"\$@\"" >> ~/.bashrc
+    echo "}" >> ~/.bashrc
+fi
+
+source ~/.bashrc
 
 echo "EC2 and GAM environment setup completed successfully."
