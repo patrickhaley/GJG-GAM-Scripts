@@ -97,12 +97,9 @@ if confirm_action "Do you want to add Python and Pip aliases to your .bashrc?"; 
     echo "alias pip=pip3" >> ~/.bashrc
 fi
 
-if confirm_action "Do you want to add the QuickSight shortcut function to your .bashrc?"; then
-    echo "function qs() {" >> ~/.bashrc
-    echo "    local subcommand=\$1" >> ~/.bashrc
-    echo "    shift" >> ~/.bashrc
-    echo "    aws quicksight \"\$subcommand\" --aws-account-id 132810038836 --namespace default \"\$@\"" >> ~/.bashrc
-    echo "}" >> ~/.bashrc
+if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
+    echo "alias qs='aws quicksight'" >> ~/.bashrc
+    echo "idns='--aws-account-id $AWS_ACCOUNT_ID --namespace default'" >> ~/.bashrc
 fi
 
 source ~/.bashrc
