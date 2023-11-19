@@ -1,4 +1,7 @@
 #! /bin/bash
+
+# This in in progress; not working yet
+
 # Purpose: Update Org Units for all users based on Group Membership.
 # Note: Org units should always be updated in order of offices, masters, corporate, special.
 #
