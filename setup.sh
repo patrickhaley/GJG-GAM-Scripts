@@ -11,6 +11,9 @@
 # Exit if any command fails
 set -e
 
+# Change to home directory
+cd ..
+
 # Function to ask for confirmation (Y/N)
 confirm_action() {
     read -p "$1 (Y/N): " -n 1 -r
@@ -51,9 +54,6 @@ if confirm_action "Do you want to add Python and Pip aliases to your .bashrc?"; 
     echo "Aliases added to .bashrc successfully."
     echo
 fi
-
-# # Change to home directory
-# cd /home/ec2-user
 
 # # Load the .env file for AWS credentials
 # echo "Loading AWS credentials from .env file..."
