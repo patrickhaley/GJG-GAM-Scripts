@@ -118,7 +118,7 @@ if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
     echo "export QS_AWS_ACCOUNT_ID=132810038836" >> ~/.bashrc
     echo "export QS_NAMESPACE=default" >> ~/.bashrc
     echo "qs() {" >> ~/.bashrc
-    echo "    aws quicksight "$1" --aws-account-id $QS_AWS_ACCOUNT_ID --namespace $QS_NAMESPACE "${@:2}"" >> ~/.bashrc
+    echo '    aws quicksight "$1" --aws-account-id $QS_AWS_ACCOUNT_ID --namespace $QS_NAMESPACE "${@:2}"' >> ~/.bashrc
     echo "}" >> ~/.bashrc
     echo
     echo "Aliases added to .bashrc successfully."
