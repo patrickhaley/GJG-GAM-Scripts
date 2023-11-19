@@ -99,7 +99,7 @@ fi
 
 if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
     echo "alias qs='aws quicksight'" >> ~/.bashrc
-    echo "idns='--aws-account-id $AWS_ACCOUNT_ID --namespace default'" >> ~/.bashrc
+    echo "alias idns='--aws-account-id $AWS_ACCOUNT_ID --namespace default'" >> ~/.bashrc
 fi
 
 source ~/.bashrc
