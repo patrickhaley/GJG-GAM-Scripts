@@ -108,22 +108,18 @@ aws configure set region us-east-1
 #     *) echo "Invalid selection. No changes made to the region." ;;
 # esac
 
-echo
 echo "AWS configuration completed successfully."
 echo
 
 # Adding AWS aliases
 if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
     echo "alias qs='aws quicksight'" >> ~/.bashrc
-    # Use a function to dynamically get AWS_ACCOUNT_ID from aws sts get-caller-identity
-    echo 'set_idns_alias() {' >> ~/.bashrc
-    echo '    local AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)' >> ~/.bashrc
-    echo '    alias idns="--aws-account-id $AWS_ACCOUNT_ID --namespace default"' >> ~/.bashrc
-    echo '}' >> ~/.bashrc
-    echo 'set_idns_alias' >> ~/.bashrc
+    # Use aws sts get-caller-identity to get your account id and replace below 
+    echo "alias idns='--aws-account-id 132810038836 --namespace default'" >> ~/.bashrc
     echo
-    echo "QuickSight aliases added to .bashrc successfully."
-fi
+    echo "Aliases added to .bashrc successfully."
+    echo
+fi    
 
 # # Setting up GAM
 # if confirm_action "Do you want to install or update GAM?"; then
