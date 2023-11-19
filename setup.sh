@@ -119,18 +119,18 @@ if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
     echo
 fi  
 
-# # Setting up GAM
-# if confirm_action "Do you want to install or update GAM?"; then
-#     if command -v gam &> /dev/null then
-#         if confirm_action "GAM is already installed. Do you want to upgrade it?"; then
-#             gam config no_browser true save
-#             gam update project
-#         fi
-#     else
-#         bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh)
-#     fi
-#     echo "GAM setup completed successfully."
-# fi
+# Setting up GAM
+if confirm_action "Do you want to install or update GAM?"; then
+    if command -v gam &> /dev/null then
+        if confirm_action "GAM is already installed. Do you want to upgrade it?"; then
+            gam config no_browser true save
+            gam update project
+        fi
+    else
+        bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh)
+    fi
+    echo "GAM setup completed successfully."
+fi
 
 source ~/.bashrc
 echo
