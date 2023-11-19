@@ -53,14 +53,14 @@ if confirm_action "Do you want to add Python and Pip aliases to your .bashrc?"; 
 fi
 
 # Change to home directory
-cd /home/ec2-user
+cd ~/.
 
 # Load the .env file for AWS credentials
 echo
 echo "Loading AWS credentials from .env file..."
 echo
 set -a
-source /home/ec2-user/GJG-GAM-Scripts/.env
+source ~/GJG-GAM-Scripts/.env
 set +a
 
 # Installing or Updating AWS CLI
