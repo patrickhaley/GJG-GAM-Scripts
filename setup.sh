@@ -65,10 +65,10 @@ source ~/GJG-GAM-Scripts/.env
 set +a
 
 # Installing or Updating AWS CLI
-echo
 if command -v aws &> /dev/null; then
     echo "AWS CLI is already installed. Current version:"
     aws --version
+    echo
     if confirm_action "Do you want to update AWS CLI?"; then
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         sudo yum install -y unzip
@@ -92,8 +92,8 @@ aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
 aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
 
 # Configure AWS region
-echo
 echo "Select a region for AWS CLI:"
+echo
 echo "1) default"
 echo "2) ap-southeast-2"
 echo "3) us-east-1"
@@ -111,6 +111,15 @@ echo
 echo "AWS configuration completed successfully."
 echo
 
+# Adding AWS aliases
+if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
+    echo "alias qs='aws quicksight'" >> ~/.bashrc
+    echo "alias idns='--aws-account-id $AWS_ACCOUNT_ID --namespace default'" >> ~/.bashrc
+    echo
+    echo "Aliases added to .bashrc successfully."
+    echo
+fi
+
 # # Setting up GAM
 # if confirm_action "Do you want to install or update GAM?"; then
 #     if command -v gam &> /dev/null; then
@@ -122,11 +131,6 @@ echo
 #         bash <(curl -s -S -L https://raw.githubusercontent.com/taers232c/GAMADV-XTD3/master/src/gam-install.sh)
 #     fi
 #     echo "GAM setup completed successfully."
-# fi
-
-# if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
-#     echo "alias qs='aws quicksight'" >> ~/.bashrc
-#     echo "alias idns="--aws-account-id "$AWS_ACCOUNT_ID" --namespace default"" >> ~/.bashrc
 # fi
 
 source ~/.bashrc
