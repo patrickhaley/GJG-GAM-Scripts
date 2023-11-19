@@ -44,6 +44,7 @@ if confirm_action "Do you want to update the system and install Python and its d
 fi
 
 # Adding Python aliases
+echo
 if confirm_action "Do you want to add Python and Pip aliases to your .bashrc?"; then
     echo "alias python=python3" >> ~/.bashrc
     echo "alias pip=pip3" >> ~/.bashrc
@@ -64,6 +65,7 @@ source ~/GJG-GAM-Scripts/.env
 set +a
 
 # Installing or Updating AWS CLI
+echo
 if command -v aws &> /dev/null; then
     echo "AWS CLI is already installed. Current version:"
     aws --version
@@ -89,18 +91,21 @@ echo
 aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
 aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
 
-# # Configure AWS region
-# current_region=$(aws configure get region)
-# echo "Current AWS region is: $current_region"
-# echo "1) Default"
-# echo "2) us-east-1"
-# echo "3) ap-southeast-2"
-# read -p "Select region (1/2/3): " region_choice
-# case $region_choice in
-#     2) aws configure set region us-east-1 ;;
-#     3) aws configure set region ap-southeast-2 ;;
-#     *) echo "Keeping the default region." ;;
-# esac
+# Configure AWS region
+echo
+echo "Select a region for AWS CLI:"
+echo "1) default"
+echo "2) ap-southeast-2"
+echo "3) us-east-1"
+echo
+read -p "Enter your choice (1, 2, or 3): " region_choice
+
+case $region_choice in
+    1) aws configure set region "default" ;;
+    2) aws configure set region "ap-southeast-2" ;;
+    3) aws configure set region "us-east-1" ;;
+    *) echo "Invalid selection. No changes made to the region." ;;
+esac
 
 echo
 echo "AWS configuration completed successfully."
