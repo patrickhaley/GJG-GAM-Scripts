@@ -90,22 +90,23 @@ echo "Configuring AWS CLI with provided credentials..."
 echo
 aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
 aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+aws configure set region us-east-1
 
 # Configure AWS region
-echo "Select a region for AWS CLI:"
-echo
-echo "1) default"
-echo "2) ap-southeast-2"
-echo "3) us-east-1"
-echo
-read -p "Enter your choice (1, 2, or 3): " region_choice
+# echo "Select a region for AWS CLI:"
+# echo
+# echo "1) default"
+# echo "2) ap-southeast-2"
+# echo "3) us-east-1"
+# echo
+# read -p "Enter your choice (1, 2, or 3): " region_choice
 
-case $region_choice in
-    1) aws configure set region "default" ;;
-    2) aws configure set region "ap-southeast-2" ;;
-    3) aws configure set region "us-east-1" ;;
-    *) echo "Invalid selection. No changes made to the region." ;;
-esac
+# case $region_choice in
+#     1) aws configure set region "default" ;;
+#     2) aws configure set region "ap-southeast-2" ;;
+#     3) aws configure set region "us-east-1" ;;
+#     *) echo "Invalid selection. No changes made to the region." ;;
+# esac
 
 echo
 echo "AWS configuration completed successfully."
@@ -114,12 +115,13 @@ echo
 # Adding AWS aliases
 if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
     echo "alias qs='aws quicksight'" >> ~/.bashrc
-    # Use a function to dynamically get AWS_ACCOUNT_ID
+    # Use a function to dynamically get AWS_ACCOUNT_ID from aws sts get-caller-identity
     echo 'set_idns_alias() {' >> ~/.bashrc
-    echo '    local AWS_ACCOUNT_ID=$(grep "AWS_ACCOUNT_ID" ~/GJG-GAM-Scripts/.env | cut -d "=" -f2)' >> ~/.bashrc
+    echo '    local AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)' >> ~/.bashrc
     echo '    alias idns="--aws-account-id $AWS_ACCOUNT_ID --namespace default"' >> ~/.bashrc
     echo '}' >> ~/.bashrc
     echo 'set_idns_alias' >> ~/.bashrc
+    echo
     echo "QuickSight aliases added to .bashrc successfully."
 fi
 
