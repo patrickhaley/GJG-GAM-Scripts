@@ -111,23 +111,17 @@ aws configure set region us-east-1
 echo "AWS configuration completed successfully."
 echo
 
-# Adding AWS aliases
+# Adding AWS aliases; Use aws sts get-caller-identity to get your account id
 if confirm_action "Do you want to add QuickSight aliases to your .bashrc?"; then
-    # echo "alias qs='aws quicksight'" >> ~/.bashrc
-    # Use aws sts get-caller-identity to get your account id and replace below 
-    echo "export QS_AWS_ACCOUNT_ID=132810038836" >> ~/.bashrc
-    echo "export QS_NAMESPACE=default" >> ~/.bashrc
-    echo "qs() {" >> ~/.bashrc
-    echo '    aws quicksight "$1" --aws-account-id $QS_AWS_ACCOUNT_ID --namespace $QS_NAMESPACE "${@:2}"' >> ~/.bashrc
-    echo "}" >> ~/.bashrc
+    echo "alias qs='aws quicksight'" >> ~/.bashrc
     echo
     echo "Aliases added to .bashrc successfully."
     echo
-fi    
+fi  
 
 # # Setting up GAM
 # if confirm_action "Do you want to install or update GAM?"; then
-#     if command -v gam &> /dev/null; then
+#     if command -v gam &> /dev/null then
 #         if confirm_action "GAM is already installed. Do you want to upgrade it?"; then
 #             gam config no_browser true save
 #             gam update project
