@@ -83,22 +83,24 @@ else
 fi
 
 # Configure AWS Access Key, Secret Key
+echo
 echo "Configuring AWS CLI with provided credentials..."
+echo
 aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
 aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
 
-# Configure AWS region
-current_region=$(aws configure get region)
-echo "Current AWS region is: $current_region"
-echo "1) Default"
-echo "2) us-east-1"
-echo "3) ap-southeast-2"
-read -p "Select region (1/2/3): " region_choice
-case $region_choice in
-    2) aws configure set region us-east-1 ;;
-    3) aws configure set region ap-southeast-2 ;;
-    *) echo "Keeping the default region." ;;
-esac
+# # Configure AWS region
+# current_region=$(aws configure get region)
+# echo "Current AWS region is: $current_region"
+# echo "1) Default"
+# echo "2) us-east-1"
+# echo "3) ap-southeast-2"
+# read -p "Select region (1/2/3): " region_choice
+# case $region_choice in
+#     2) aws configure set region us-east-1 ;;
+#     3) aws configure set region ap-southeast-2 ;;
+#     *) echo "Keeping the default region." ;;
+# esac
 
 echo
 echo "AWS configuration completed successfully."
