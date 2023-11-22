@@ -1,5 +1,7 @@
 /**
- * Scheduled SSO Provisioning and Role Mapping Script for AWS QuickSight in Google Workspace
+ * Automatically updates AWS QuickSight roles for users in a specific Google Workspace group,
+ * while excluding members of another group. This script is intended to facilitate SSO integration 
+ * with AWS QuickSight.
  *
  * This script, designed to be run on a schedule within Google Apps Script, automates the provisioning
  * of user access to AWS QuickSight through SSO. Detailed in the AWS blog
@@ -22,55 +24,49 @@
  */
 
 function updateGroupMemberAttributes() {
-  // Define the main group and the group used for exclusion.
-  var mainGroupEmail = "main_group@yourdomain.com"; // Email of the main group to to find members.
-  var excludeGroupEmail = "exclusion_group@yourdomain.com"; // Email of the group used for exclusion.
+  // Define the email addresses of the main group and the exclusion group.
+  var mainGroupEmail = "corporate_users@gjgardner.com"; // Main group to process.
+  var excludeGroupEmail = "quicksight-users@gjgardner.com"; // Exclusion group.
 
-  // Role details to be assigned.
-  var roleName =
-    "arn_aws_iam_role,arn_aws_iam_idp"; // ARN for QuickSight roles; Manually add Author or Admin role to user to skip updates. See https://aws.amazon.com/blogs/big-data/configure-an-automated-email-sync-for-federated-sso-users-to-access-amazon-quicksight/
-  var schemaName = "SSO"; // The name of the custom schema.
-  var fieldName = "QuickSight"; // The field within the custom schema to be updated.
+  // Define the role ARN to be assigned to the users.
+  var roleName = "arn:aws:iam::132810038836:role/QuickSight-Reader-Role,arn:aws:iam::132810038836:saml-provider/GoogleUS";
 
-  // Fetch the members of the main group.
-  var mainGroupMembers = AdminDirectory.Members.list(mainGroupEmail).members;
-  // Fetch the members of the exclusion group.
-  var excludeGroupMembers =
-    AdminDirectory.Members.list(excludeGroupEmail).members;
+  // Schema and field name in Google Workspace Directory for QuickSight role.
+  var schemaName = "SSO";
+  var fieldName = "QuickSight";
 
-  // Create a Set of email addresses for efficient lookup to check exclusion.
-  var excludeEmails = new Set(
-    excludeGroupMembers.map((member) => member.email)
-  );
+  // Fetch members of the main group and the exclusion group.
+  var mainGroupMembers = AdminDirectory.Members.list(mainGroupEmail).members || [];
+  var excludeGroupMembers = AdminDirectory.Members.list(excludeGroupEmail).members || [];
 
-  // Check if the main group has members.
-  if (!mainGroupMembers || mainGroupMembers.length === 0) {
-    Logger.log("No members found in the main group.");
-    return; // Exit if no members are found.
-  }
+  // Create a Set for quick lookup of exclusion group members.
+  var excludeEmails = new Set(excludeGroupMembers.map((member) => member.email));
 
   // Iterate over each member of the main group.
   mainGroupMembers.forEach((member) => {
-    var userEmail = member.email; // Email address of the current member.
+    var userEmail = member.email; // Email of the current member.
 
-    // Skip the update process for members who are also in the exclude group.
+    // Check if the member is part of the exclusion group.
     if (excludeEmails.has(userEmail)) {
-      Logger.log(
-        `${userEmail} is a member of ${excludeGroupEmail}, skipping update.`
-      );
-      return; // Continue to the next iteration.
+      console.log(userEmail + " is already in the quicksight-users group, skipping.");
+      return; // Skip updating this member.
     }
 
-    // Retrieve detailed information of the user.
-    var user = AdminDirectory.Users.get(userEmail);
+    try {
+      // Retrieve the user's current Google Workspace profile details.
+      var user = AdminDirectory.Users.get(userEmail);
 
-    // Ensure that the custom schema structure is present for the user.
-    user.customSchemas = user.customSchemas || {};
-    user.customSchemas[schemaName] = user.customSchemas[schemaName] || {};
+      // Prepare or update the custom schema for QuickSight role assignment.
+      var customSchemas = user.customSchemas || {};
+      customSchemas[schemaName] = customSchemas[schemaName] || {};
+      customSchemas[schemaName][fieldName] = [{ value: roleName }]; // Set the role.
 
-    // Update the QuickSight field in the custom schema with the new role.
-    user.customSchemas[schemaName][fieldName] = [{ value: roleName }];
-    AdminDirectory.Users.update(user, userEmail); // Apply the update to the user.
-    Logger.log("Updated QuickSight Role for " + userEmail); // Log the update action.
+      // Update the user profile in Google Workspace Directory with the new role.
+      AdminDirectory.Users.update({ customSchemas: customSchemas }, userEmail);
+      console.log("Updated QuickSight Role for " + userEmail);
+    } catch (e) {
+      // Log errors if the updating process fails.
+      console.log("Error updating " + userEmail + ": " + e.message);
+    }
   });
 }
