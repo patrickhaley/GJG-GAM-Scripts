@@ -25,11 +25,11 @@
 
 function updateGroupMemberAttributes() {
   // Define the email addresses of the main group and the exclusion group.
-  var mainGroupEmail = "corporate_users@gjgardner.com"; // Main group to process.
-  var excludeGroupEmail = "quicksight-users@gjgardner.com"; // Exclusion group.
+  var mainGroupEmail = "PRIMARY_GROUP@YOURDOMAIN.COM"; // Main group to process.
+  var excludeGroupEmail = "EXCLUSION_GROUP@YOURDOMAIN.COM"; // Exclusion group.
 
   // Define the role ARN to be assigned to the users.
-  var roleName = "arn:aws:iam::132810038836:role/QuickSight-Reader-Role,arn:aws:iam::132810038836:saml-provider/GoogleUS";
+  var roleName = "AWS_IAM_ROLE_ARN,AWS_IAM_IDP_ARN";
 
   // Schema and field name in Google Workspace Directory for QuickSight role.
   var schemaName = "SSO";
@@ -48,7 +48,7 @@ function updateGroupMemberAttributes() {
 
     // Check if the member is part of the exclusion group.
     if (excludeEmails.has(userEmail)) {
-      console.log(userEmail + " is already in the quicksight-users group, skipping.");
+      console.log(userEmail + " is already in the exclusions group, skipping.");
       return; // Skip updating this member.
     }
 
