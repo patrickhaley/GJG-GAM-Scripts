@@ -1,0 +1,45 @@
+/**
+ * Updates the QuickSight role for all members of a group.
+ */
+function updateQuickSightRoleForGroupMembers() {
+  var groupEmail = "test@gjgardner.com"; // Group email
+  var roleName = "QS-HELLO";
+  var schemaName = "SSO"; // Correct schema name
+  var fieldName = "QuickSight"; // Correct field name
+
+  var members = AdminDirectory.Members.list(groupEmail).members;
+
+  if (members && members.length > 0) {
+    for (var i = 0; i < members.length; i++) {
+      var userEmail = members[i].email;
+      var user = AdminDirectory.Users.get(userEmail);
+
+      // Initialize custom schema if not present
+      if (!user.customSchemas) {
+        user.customSchemas = {};
+      }
+
+      // Initialize specific schema if not present
+      if (!user.customSchemas[schemaName]) {
+        user.customSchemas[schemaName] = {};
+      }
+
+      // Check if the field is empty and set appropriately
+      if (
+        !user.customSchemas[schemaName][fieldName] ||
+        user.customSchemas[schemaName][fieldName].length === 0
+      ) {
+        // If empty, initialize it with an array and add the new role value
+        user.customSchemas[schemaName][fieldName] = [];
+        user.customSchemas[schemaName][fieldName].push({ value: roleName });
+
+        AdminDirectory.Users.update(user, userEmail);
+        Logger.log("Updated QuickSight Role for " + userEmail);
+      } else {
+        Logger.log(userEmail + " already has the correct QuickSight Role.");
+      }
+    }
+  } else {
+    Logger.log("No members found in the group.");
+  }
+}
