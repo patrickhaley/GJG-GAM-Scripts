@@ -1,26 +1,34 @@
 /**
- * Script to Automatically Update QuickSight Roles in Google Workspace
+ * Scheduled SSO Provisioning and Role Mapping Script for AWS QuickSight in Google Workspace
  *
- * This script is designed to automate the process of provisioning user access to AWS QuickSight
- * via QuickSight by supplying the IAM role and IdP to users within a particular Google Workspace
- * group (main group). It excludes users who are members of another specified group (exclusion group).
- * This automation is crucial for managing user roles in AWS QuickSight, ensuring that users have
- * the correct permissions based on their group membership in Google Workspace.
+ * This script, designed to be run on a schedule within Google Apps Script, automates the provisioning
+ * of user access to AWS QuickSight through SSO. Detailed in the AWS blog
+ * (https://aws.amazon.com/blogs/big-data/configure-an-automated-email-sync-for-federated-sso-users-to-access-amazon-quicksight/),
+ * it syncs IAM role and IdP information to users within a specific Google Workspace group, excluding
+ * members of another designated group. This is part of the SSO access setup required in QuickSight.
  *
- * The script iterates over members of the main group and assigns a predefined QuickSight role
- * to their profile, but only if they are not members of the exclusion group. This setup is useful
- * for maintaining proper role assignment in QuickSight without manual intervention, especially when
- * dealing with a large number of users.
+ * Primarily, the script assigns the 'QuickSight-Reader-Role' to user profiles, mapping ARNs for the IAM user
+ * role and ARN Identity Provider to the required PrincipalTag:Email, facilitating automated user email
+ * creation in QuickSight SSO. For other access levels, such as 'QuickSight-Author-Role' or 'QuickSight-Admin-Role',
+ * manual updates can be made in Google Workspace Directory settings under the SSO QuickSight schema.
+ *
+ * The script is meant to be run on a recurring schedule, ensuring continuous updates for new users. This
+ * automated approach is crucial for large organizations where manual provisioning is inefficient.
+ *
+ * Ensure the IdP and roles are correctly configured as per AWS documentation:
+ * https://docs.aws.amazon.com/quicksight/latest/user/jit-email-syncing.html.
+ *
+ * The script is hosted on GitHub and can be found here: LINK_GOES_HERE
  */
 
 function updateGroupMemberAttributes() {
   // Define the main group and the group used for exclusion.
-  var mainGroupEmail = "corporate_users@gjgardner.com"; // Email of the main group to to find members.
-  var excludeGroupEmail = "quicksight-users@gjgardner.com"; // Email of the group used for exclusion.
+  var mainGroupEmail = "main_group@yourdomain.com"; // Email of the main group to to find members.
+  var excludeGroupEmail = "exclusion_group@yourdomain.com"; // Email of the group used for exclusion.
 
   // Role details to be assigned.
   var roleName =
-    "arn:aws:iam::132810038836:role/QuickSight-Reader-Role,arn:aws:iam::132810038836:saml-provider/GoogleUS"; // ARN for QuickSight roles; Manually add Author or Admin role to user to skip updates. See https://aws.amazon.com/blogs/big-data/configure-an-automated-email-sync-for-federated-sso-users-to-access-amazon-quicksight/
+    "arn_aws_iam_role,arn_aws_iam_idp"; // ARN for QuickSight roles; Manually add Author or Admin role to user to skip updates. See https://aws.amazon.com/blogs/big-data/configure-an-automated-email-sync-for-federated-sso-users-to-access-amazon-quicksight/
   var schemaName = "SSO"; // The name of the custom schema.
   var fieldName = "QuickSight"; // The field within the custom schema to be updated.
 
