@@ -1,45 +1,68 @@
 /**
- * Updates the QuickSight role for all members of a group.
+ * Script to Automatically Update QuickSight Roles in Google Workspace
+ *
+ * This script is designed to automate the process of provisioning user access to AWS QuickSight
+ * via QuickSight by supplying the IAM role and IdP to users within a particular Google Workspace
+ * group (main group). It excludes users who are members of another specified group (exclusion group).
+ * This automation is crucial for managing user roles in AWS QuickSight, ensuring that users have
+ * the correct permissions based on their group membership in Google Workspace.
+ *
+ * The script iterates over members of the main group and assigns a predefined QuickSight role
+ * to their profile, but only if they are not members of the exclusion group. This setup is useful
+ * for maintaining proper role assignment in QuickSight without manual intervention, especially when
+ * dealing with a large number of users.
  */
-function updateQuickSightRoleForGroupMembers() {
-  var groupEmail = "test@gjgardner.com"; // Group email
-  var roleName = "QS-HELLO";
-  var schemaName = "SSO"; // Correct schema name
-  var fieldName = "QuickSight"; // Correct field name
 
-  var members = AdminDirectory.Members.list(groupEmail).members;
+function updateGroupMemberAttributes() {
+  // Define the main group and the group used for exclusion.
+  var mainGroupEmail = "corporate_users@gjgardner.com"; // Email of the main group to to find members.
+  var excludeGroupEmail = "quicksight-users@gjgardner.com"; // Email of the group used for exclusion.
 
-  if (members && members.length > 0) {
-    for (var i = 0; i < members.length; i++) {
-      var userEmail = members[i].email;
-      var user = AdminDirectory.Users.get(userEmail);
+  // Role details to be assigned.
+  var roleName =
+    "arn:aws:iam::132810038836:role/QuickSight-Reader-Role,arn:aws:iam::132810038836:saml-provider/GoogleUS"; // ARN for QuickSight roles; Manually add Author or Admin role to user to skip updates. See https://aws.amazon.com/blogs/big-data/configure-an-automated-email-sync-for-federated-sso-users-to-access-amazon-quicksight/
+  var schemaName = "SSO"; // The name of the custom schema.
+  var fieldName = "QuickSight"; // The field within the custom schema to be updated.
 
-      // Initialize custom schema if not present
-      if (!user.customSchemas) {
-        user.customSchemas = {};
-      }
+  // Fetch the members of the main group.
+  var mainGroupMembers = AdminDirectory.Members.list(mainGroupEmail).members;
+  // Fetch the members of the exclusion group.
+  var excludeGroupMembers =
+    AdminDirectory.Members.list(excludeGroupEmail).members;
 
-      // Initialize specific schema if not present
-      if (!user.customSchemas[schemaName]) {
-        user.customSchemas[schemaName] = {};
-      }
+  // Create a Set of email addresses for efficient lookup to check exclusion.
+  var excludeEmails = new Set(
+    excludeGroupMembers.map((member) => member.email)
+  );
 
-      // Check if the field is empty and set appropriately
-      if (
-        !user.customSchemas[schemaName][fieldName] ||
-        user.customSchemas[schemaName][fieldName].length === 0
-      ) {
-        // If empty, initialize it with an array and add the new role value
-        user.customSchemas[schemaName][fieldName] = [];
-        user.customSchemas[schemaName][fieldName].push({ value: roleName });
-
-        AdminDirectory.Users.update(user, userEmail);
-        Logger.log("Updated QuickSight Role for " + userEmail);
-      } else {
-        Logger.log(userEmail + " already has the correct QuickSight Role.");
-      }
-    }
-  } else {
-    Logger.log("No members found in the group.");
+  // Check if the main group has members.
+  if (!mainGroupMembers || mainGroupMembers.length === 0) {
+    Logger.log("No members found in the main group.");
+    return; // Exit if no members are found.
   }
+
+  // Iterate over each member of the main group.
+  mainGroupMembers.forEach((member) => {
+    var userEmail = member.email; // Email address of the current member.
+
+    // Skip the update process for members who are also in the exclude group.
+    if (excludeEmails.has(userEmail)) {
+      Logger.log(
+        `${userEmail} is a member of ${excludeGroupEmail}, skipping update.`
+      );
+      return; // Continue to the next iteration.
+    }
+
+    // Retrieve detailed information of the user.
+    var user = AdminDirectory.Users.get(userEmail);
+
+    // Ensure that the custom schema structure is present for the user.
+    user.customSchemas = user.customSchemas || {};
+    user.customSchemas[schemaName] = user.customSchemas[schemaName] || {};
+
+    // Update the QuickSight field in the custom schema with the new role.
+    user.customSchemas[schemaName][fieldName] = [{ value: roleName }];
+    AdminDirectory.Users.update(user, userEmail); // Apply the update to the user.
+    Logger.log("Updated QuickSight Role for " + userEmail); // Log the update action.
+  });
 }
