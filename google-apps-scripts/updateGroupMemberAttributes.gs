@@ -20,7 +20,7 @@
  * Ensure the IdP and roles are correctly configured as per AWS documentation:
  * https://docs.aws.amazon.com/quicksight/latest/user/jit-email-syncing.html.
  *
- * The script is hosted on GitHub and can be found here: https://github.com/patrickhaley/GJG-GAM-Scripts/blob/main/google-apps-scripts/updateGroupMemberAttributes
+ * The script is hosted on GitHub and can be found here: https://github.com/patrickhaley/GJG-GAM-Scripts/blob/main/google-apps-scripts/updateGroupMemberAttributes.gs
  */
 
 function updateGroupMemberAttributes() {
