@@ -38,6 +38,7 @@ if confirm_action "Do you want to update the system and install Python and its d
     pip3 install --upgrade pip
     pip3 install requests
     pip3 install python-dotenv
+    pip3 install pytz
     echo
     echo "Python setup completed successfully."
     echo
