@@ -3,14 +3,9 @@ import os
 from datetime import datetime
 import pytz
 
-from dotenv import load_dotenv
-
-# Load .env file
-load_dotenv()
-
 # Define paths
-gam_path = os.path.expanduser("~/gamadv-xtd3/gam")
-csv_file_path = os.path.expanduser('~/GAMWork/inactive_users.csv')
+gam_path = os.path.expanduser("~/gamadv-xtd3/gam") #Replace with path to GAM
+csv_file_path = os.path.expanduser('~/GAMWork/inactive_users.csv') #Replace with path to to CSV
 
 def parse_date(date_str):
     if date_str == "Never":
