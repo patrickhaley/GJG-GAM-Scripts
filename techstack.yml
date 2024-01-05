@@ -1,7 +1,8 @@
 repo_name: patrickhaley/GJG-GAM-Scripts
 report_id: e33c9256388605e4bd1128cafdc7c96b
+version: 0.1
 repo_type: Public
-timestamp: '2023-12-06T20:27:33+00:00'
+timestamp: '2024-01-05T08:28:37+00:00'
 requested_by: patrickhaley
 provider: github
 branch: main
@@ -16,6 +17,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source_url: https://github.com/patrickhaley/GJG-GAM-Scripts
   detection_source: Repo Metadata
 - name: Python
   description: A clear and powerful object-oriented programming language, comparable
@@ -26,6 +28,7 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/993/pUBY5pVj.png
+  detection_source_url: https://github.com/patrickhaley/GJG-GAM-Scripts
   detection_source: Repo Metadata
 - name: Git
   description: Fast, scalable, distributed revision control system
@@ -35,6 +38,7 @@ tools:
   category: Build, Test, Deploy
   sub_category: Version Control System
   image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source_url: https://github.com/patrickhaley/GJG-GAM-Scripts
   detection_source: Repo Metadata
 - name: Shell
   description: A shell is a text-based terminal, used for manipulating programs and
@@ -45,4 +49,5 @@ tools:
   category: Languages & Frameworks
   sub_category: Languages
   image_url: https://img.stackshare.io/service/4631/default_c2062d40130562bdc836c13dbca02d318205a962.png
+  detection_source_url: https://github.com/patrickhaley/GJG-GAM-Scripts
   detection_source: Repo Metadata
